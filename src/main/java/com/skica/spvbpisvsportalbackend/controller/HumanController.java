@@ -17,8 +17,8 @@ public class HumanController extends GenericController<Human> {
         super(Human.class);
     }
 
-    @PostMapping(value = "/bind/role", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    ResponseEntity<String> bindRole(@RequestParam long humanId, @RequestParam long roleId) {
+    @PostMapping(value = "{humanId}/bind/role/{roleId}")
+    ResponseEntity<String> bindRole(@PathVariable long humanId, @PathVariable long roleId) {
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
         var human = session.get(Human.class, humanId);
