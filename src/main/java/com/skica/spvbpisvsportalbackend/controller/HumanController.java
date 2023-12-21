@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("human")
 public class HumanController extends GenericController<Human> {
@@ -35,5 +37,23 @@ public class HumanController extends GenericController<Human> {
         session.close();
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully bound");
+    }
+    @PostMapping(value = "{humanId}/unbind/role/{roleId}")
+    ResponseEntity<String> unbindRole(@PathVariable long humanId, @PathVariable long roleId) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        var human = session.get(Human.class, humanId);
+        if(human == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No human with id" + humanId);
+        }
+        Optional<Role> removeRole = human.roles.stream().filter(role -> role.id == roleId).findAny();
+        if(removeRole.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No role with id" + roleId);
+        }
+        human.roles.remove(removeRole.get());
+        tx.commit();
+        session.close();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully unbound");
     }
 }
