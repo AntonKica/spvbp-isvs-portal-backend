@@ -33,8 +33,6 @@ class RoleTest {
 
             Role f = em.find(Role.class, role.id);
             System.out.println(f.humans);
-            Asset a = em.find(Asset.class, 1);
-            System.out.println(a.name);
             em.close();
             emf.close();
         }
