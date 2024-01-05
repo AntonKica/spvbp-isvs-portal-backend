@@ -4,3 +4,6 @@ build/
 
 # InteliJ IDEA
 .idea
+
+# custom
+run
