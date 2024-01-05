@@ -1,0 +1,1 @@
+DB_PASSWORD='AyWM4SYr*NieC|4$zw`7pu-]x' DB_URL='jdbc:postgresql://localhost/gd_db' DB_USERNAME='gd_user' gradle run
