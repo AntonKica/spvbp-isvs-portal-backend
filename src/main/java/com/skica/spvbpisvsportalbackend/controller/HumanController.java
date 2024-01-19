@@ -1,5 +1,6 @@
 package com.skica.spvbpisvsportalbackend.controller;
 
+import com.skica.spvbpisvsportalbackend.entity.BusinessProcess;
 import com.skica.spvbpisvsportalbackend.entity.Human;
 import com.skica.spvbpisvsportalbackend.entity.Role;
 import com.skica.spvbpisvsportalbackend.generic.GenericController;
@@ -55,5 +56,25 @@ public class HumanController extends GenericController<Human> {
         session.close();
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully unbound");
+    }
+    @PostMapping(value = "{humanId}/attach/businessProcess/{businessProcessId}")
+    ResponseEntity<String> attachBusinessProcess(@PathVariable long humanId, @PathVariable long businessProcessId) {
+        Session session = sessionFactory.openSession();
+        var human = session.get(Human.class, humanId);
+        if(human == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No human with id" + humanId);
+        }
+
+        var businessProcess = session.get(BusinessProcess.class, businessProcessId);
+        if(businessProcess == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No business process with id" + humanId);
+        }
+        Transaction tx = session.beginTransaction();
+        businessProcess.contact = human;
+        human.businessProcesses.add(businessProcess);
+        tx.commit();
+        session.close();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully attached process");
     }
 }

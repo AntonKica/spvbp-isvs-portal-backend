@@ -21,4 +21,8 @@ public class Human extends GenericEntity {
             joinColumns = @JoinColumn(name = "humanId"),
             inverseJoinColumns = @JoinColumn(name = "roleId"))
     public Set<Role> roles;
+
+    @JsonIgnoreProperties("contact")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "contact")
+    public Set<BusinessProcess> businessProcesses;
 }
